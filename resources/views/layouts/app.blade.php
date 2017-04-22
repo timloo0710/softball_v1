@@ -210,9 +210,23 @@ $(document).ready(function() {
             } ,
                 dataType: "json"
             });
+
+       $(".edtLog").click(function(){ //[href~='pitcher']
+             alert('edit log');    
+             console.log($(this).data( "q-pid" )) ;
+             console.log(getCookie("match_val"));
+            });    
+     
         
 })
 
+$(document).on('click', '.edtLog', function(){ 
+      alert('edit log');  
+
+
+
+
+});
 
 
 function setCookie(cname, cvalue, exdays) {
@@ -576,10 +590,11 @@ function fillLog(data){
             s_html+=  '    <td>'+data[i].p_result+'</td>';
             s_html+=  '    <td>'+data[i].outs+'</td>';
             s_html+=  '    <td>'+data[i].run+'</td>';
-            s_html+=  '    <td><button type="button" data-q-pid="'+data[i].id+'" class="btn btn-warning btn-xs" id="edtLog_'+data[i].id+'" >編輯</button>';
-            s_html+=  '        <button type="button" data-d-pid="'+data[i].id+'"class="btn btn-success btn-xs" id="delLog_'+data[i].id+'" >刪除</button></td></tr>';
+            s_html+=  '    <td><button type="button" data-q-pid="'+data[i].id+'" class="edtLog btn btn-warning btn-xs" id="edtLog_'+data[i].id+'" >編輯</button>';
+           // s_html+=  '    <td><a href="/pitchers/'+data[i].id+'" data-q-pid="'+data[i].id+'" class="edtLog  btn btn-warning btn-xs" id="edtLog_'+data[i].id+'" >編輯</a>';
+            s_html+=  '        <button type="button" data-d-pid="'+data[i].id+'"class="delLog  btn btn-success btn-xs" id="delLog_'+data[i].id+'" >刪除</button></td></tr>';
             //console.log(data[i].hitorder + ",  " + data[i].name );
-    }
+    } 
     s_html+="</tbody> ";
     $("#clog").html(s_html) ;
 }
@@ -711,7 +726,7 @@ $('#newMatch').click(function(){
         });
  });    
 
-$("[data-q-pid]").click(function(){ 
+$(".edtLog").click(function(){ //[href~='pitcher'] 
     console.log($(this).data( "q-pid" )) ;
     console.log(getCookie("match_val"));
  });    
