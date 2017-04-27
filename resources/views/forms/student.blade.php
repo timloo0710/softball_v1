@@ -7,10 +7,10 @@
             新增球員
         </div>
         <div class="modal-body">
-                <!--  Name -->
-                    <div class="col-sm-6">
-                        <input type="text" id="studentname" class="form-control" placeholder="球員名稱" >
-                    </div>
+        <!--  Name -->
+            <div class="col-sm-6">
+                <input type="text" id="studentname" class="form-control" placeholder="球員名稱" >
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

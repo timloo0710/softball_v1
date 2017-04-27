@@ -14,14 +14,14 @@
                             </select>
                         </div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal">                
+                            <button type="button"  class="btn btn-warning btn-xs edtMaster" data-toggle="modal"  data-target="#myModal" data-type="cup" data-id="1" id="eBtnCup" >                
                                 編輯
                             </button>
-                            <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">                
+                            <button type="button" class="btn btn-success btn-xs delMaster" data-type="cup" data-id="1" id="dBtnCup"  >                
                                 刪除
                             </button>
                         </div>
-                        <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#myModal">                
+                        <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#myModal" id="aBtnCup">                
                             新增一個盃賽
                         </button>
                     </div>
@@ -47,13 +47,13 @@
                             @include('forms.school')
                         </div>
                         <div class="col-sm-6">
-                            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal">                
+                            <button type="button" class="btn btn-warning btn-xs edtMaster" data-toggle="modal" data-target="#Modal_school" data-type="school" data-id="1" id="eBtnSchool" >                
                                 編輯
                             </button>
-                            <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">                
+                            <button type="button" class="btn btn-success btn-xs delMaster" data-type="school" data-id="1" id="dBtnSchool" >                
                                 刪除
                             </button>
-                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modal_school">                
+                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modal_school" id="aBtnSchool">                
                                 新增一所學校
                             </button>
                             <button type="button" id="newStudent" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modal_student">                
@@ -64,7 +64,6 @@
                         <table class="table table-striped table-hover "  id="studentsBySchool" >
 
                         </table>
-                        
                     </div>
                 </div>
             </div>
@@ -87,13 +86,13 @@
                             </select>                
                           </div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal">                
+                            <button type="button" class="btn btn-warning btn-xs edtMaster" data-toggle="modal" data-target="#Modal_match" data-type="match" data-id="1" id="eBtnMatch" >                
                                 編輯
                             </button>
-                            <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal">                
+                            <button type="button" class="btn btn-success btn-xs delMaster" data-type="match" data-id="1" id="dBtnMatch">                
                                 刪除
                             </button>
-                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modal_match" id="newMatch"  >                
+                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modal_match"  id="aBtnMatch" >                
                                 新增一個對戰組合
                             </button>
                         </div>
@@ -145,16 +144,16 @@
         <div class="col-sm-offset-2 col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#newLogger">                
+                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#newLogger" id="aBtnLog">                
                         記錄本場比賽
                     </button>
                 </div>
                 <div class="panel-body">
+                    <table class="table table-striped table-hover "  id="clog" >
+                    </table>
                     @include('forms.logger')
+                    @include('forms.edlogger')
                 </div>
-                <table class="table table-striped table-hover "  id="clog" >
-                </table>
-                
             </div>
         </div>
     </div>

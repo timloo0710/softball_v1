@@ -50,6 +50,31 @@ Route::get('/cups', function () {
     return view('hello');
 });
 
+Route::get('/cups/{id}', function ($id) {
+    $cup = App\Cup::findOrFail($id);
+    return $cup->toJson();
+});
+
+Route::put('/cups/{id}', function ($id,Request $request) {
+    $cup = App\Cup::findOrFail($id);
+    $cup->cupname = $request->input('cupname');
+    $cup->place = $request->input('place');
+    $cup->creator = $request->input('creator');
+    //$cup->junior = $request->input('junior');
+    $cup->save();
+
+    $cups = App\Cup::select('id','cupname')->get();
+    return $cups->toJson();
+});
+
+Route::delete('/cups/{id}', function ($id) {
+    $cup = App\Cup::findOrFail($id);
+    $cup->delete();
+
+    $cups = App\Cup::select('id','cupname')->get();
+    return $cups->toJson();
+});
+
 
 Route::post('/cups/store', function(Request $request){
     if($request->ajax()){
@@ -81,13 +106,45 @@ Route::post('/cups/store', function(Request $request){
     }
 });
 
+
 Route::get('/schools/all', function(Request $request){
+       // $cid = $request->cup_id;
+        $schools = App\School::select('id','name')->all(); //where('cup_id', $cid )->get();
+        return $schools->toJson();
+});
+
+Route::get('/schools/byCup', function(Request $request){
     if($request->ajax()){
         $cid = $request->cup_id;
         $schools = App\School::select('id','name')->where('cup_id', $cid )->get();
         return $schools->toJson();
     }
 });
+
+
+
+Route::get('/schools/{id}', function($id){
+    $school = App\School::findOrFail($id);
+    return $school->toJson();
+});
+
+Route::put('/schools/{id}', function ($id,Request $request) {
+    $school = App\School::findOrFail($id);
+    $school->name = $request->input('schoolname');
+    $school->save();
+
+    $schools = App\School::select('id','name')->get();
+    return $schools->toJson();
+});
+
+Route::delete('/schools/{id}', function ($id) {
+    $school = App\School::findOrFail($id);
+    $school->delete();
+
+    $school = App\School::select('id','name')->get();
+    return $school->toJson();
+});
+
 
 Route::post('/schools/store', function(Request $request){
     if($request->ajax()){
@@ -98,6 +155,63 @@ Route::post('/schools/store', function(Request $request){
         $cid = $request->cup_id;
         $schools = App\School::select('id','name')->where('cup_id', $cid )->get();
         return $schools->toJson();
+    }
+});
+
+
+Route::get('/matches/all', function(Request $request){
+    if($request->ajax()){
+        $cid = $request->cup_id;
+        $matches = App\Match::select('id','visit_name','host_name','game_order')->where('cup_id', $cid )->get();//->whereIn('id', array(1, 2, 3))
+        return $matches->toJson();
+    }
+});
+
+
+Route::get('/matches/{id}/edit', function ($id) {
+    $match = App\Match::findOrFail($id);
+    return $match->toJson();
+});
+
+Route::put('/matches/{id}', function ($id,Request $request) {
+    $match = App\Match::findOrFail($id);
+    $match->holded_at = $request->holded_at;
+    $match->begin_time_set = $request->input('begin_time_set');
+    $match->game_order = $request->input('game_order');
+    $match->visit_name = $request->input('visit_name');
+    $match->host_name = $request->input('host_name');
+    $match->js = '高中';
+    $match->cup_id = $request->input('cid');
+    $match->save();
+
+    $matches = App\Match::select('id','name')->get();
+    return $matches->toJson();
+});
+
+Route::delete('/matches/{id}', function ($id) {
+    $match = App\Match::findOrFail($id);
+    $match->delete();
+
+    $matches = App\Match::select('id','visit_name','host_name','game_order')->get(); //->where('cup_id', $cid )
+    return $matches->toJson();
+});
+
+
+Route::post('/matches/store', function(Request $request){
+    if($request->ajax()){
+        $match = new App\Match;
+        $match->holded_at = $request->holded_at;
+        $match->begin_time_set = $request->input('begin_time_set');
+        $match->game_order = $request->input('game_order');
+        $match->visit_name = $request->input('visit_name');
+        $match->host_name = $request->input('host_name');
+        $match->js = '高中';
+        $match->cup_id = $request->input('cid');
+        $match->save();
+
+        $cid = $request->cid;
+        $matches = App\Match::select('id','visit_name','host_name','game_order')->where('cup_id', $cid )->get();//->whereIn('id', array(1, 2, 3))
+        return $matches->toJson();
     }
 });
 
@@ -116,8 +230,8 @@ Route::post('/students/store', function(Request $request){
 Route::get('/students/all', function(Request $request){
     if($request->ajax()){
         $sid = $request->school_id;
-        $schools = App\Student::select('id','name')->where('school_id', $sid )->get();
-        return $schools->toJson();
+        $students = App\Student::select('id','name')->where('school_id', $sid )->get();
+        return $students->toJson();
     }
 });
 
@@ -158,31 +272,6 @@ Route::get('/students/hv', function(Request $request){
 });
 
 
-Route::post('/matches/store', function(Request $request){
-    if($request->ajax()){
-        $match = new App\Match;
-        $match->holded_at = $request->holded_at;
-        $match->begin_time_set = $request->input('begin_time_set');
-        $match->game_order = $request->input('game_order');
-        $match->visit_name = $request->input('visit_name');
-        $match->host_name = $request->input('host_name');
-        $match->js = '高中';
-        $match->cup_id = $request->input('cid');
-        $match->save();
-
-        $cid = $request->cid;
-        $matches = App\Match::select('id','visit_name','host_name','game_order')->where('cup_id', $cid )->get();//->whereIn('id', array(1, 2, 3))
-        return $matches->toJson();
-    }
-});
-
-Route::get('/matches/all', function(Request $request){
-    if($request->ajax()){
-        $cid = $request->cup_id;
-        $matches = App\Match::select('id','visit_name','host_name','game_order')->where('cup_id', $cid )->get();//->whereIn('id', array(1, 2, 3))
-        return $matches->toJson();
-    }
-});
 
 Route::post('/players/store', function(Request $request){
     if($request->ajax()){
@@ -203,6 +292,24 @@ Route::post('/players/store', function(Request $request){
 });
 
 
+Route::put('/pitchers/{id}', function ($id,Request $request) {
+    $pitcher = App\Pitcher::findOrFail($id);
+    $pitcher->inning_id = $request->inn;
+    $pitcher->defender_id = $request->defender;
+    $pitcher->attacker_id = $request->attacker;
+    $pitcher->catcher = $request->catcher;
+    $pitcher->p_result = $request->p_result;
+    $pitcher->a_result = $request->a_result;
+    $pitcher->d_result = $request->d_result;
+    $pitcher->outs = $request->outs;
+    $pitcher->defense = $request->defense;
+    $pitcher->defense2 = $request->defense2;
+    $pitcher->run = $request->run;
+    $pitcher->save();
+    $mid = $request->mid;
+    $pitchers = App\Pitcher::select('inning_id','defender_id','attacker_id','p_result','outs','run','id')->where('match_id', $mid )->get();;
+    return $pitchers->toJson();
+});
 
 Route::post('/pitchers/store', function(Request $request){
     if($request->ajax()){
@@ -237,6 +344,20 @@ Route::get('/pitchers/all', function(Request $request){
         $pitchers = App\Pitcher::select('inning_id','defender_id','attacker_id','p_result','outs','run','id')->where('match_id', $mid )->get();
         return $pitchers->toJson();
     }
+});
+
+Route::get('/pitchers/{id}', function ($id) {
+    $pitcher = App\Pitcher::findOrFail($id);
+    return $pitcher->toJson();
+});
+
+
+Route::delete('/pitchers/{id}', function ($id) {
+    $match = App\Match::findOrFail($id);
+    $match->delete();
+
+    $matches = App\Match::select('id','visit_name','host_name','game_order')->get(); //->where('cup_id', $cid )
+    return $matches->toJson();
 });
 
 

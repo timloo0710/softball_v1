@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('thisMatch')
-<div class="container">
+<div class="container" id="">
     <div class="row">
         <div class="col-xs-6 col-sm-4"><canvas id="myChart1" ></canvas></div>
         <div class="col-xs-6 col-sm-4"><canvas id="myChart2" ></canvas></div>
@@ -16,7 +16,6 @@
         <div class="clearfix visible-xs-block"></div>
         <div class="col-xs-6 col-sm-4"><canvas id="myChart6" ></canvas></div>
     </div>
-
 </div>
 @endsection
 @section('thisCup')

@@ -161,26 +161,57 @@
 
 <script type="text/javascript">
 
+function fillSelSchoolByCup2(){
+   console.log(getCookie("cup_val"));
+//        alert(getCookie("cup_val"));
+    $.ajax({
+        type: "GET",
+        url: "/schools/byCup?cup_id="+getCookie("cup_val"), 
+        success:function(data) {
+                updateSelSchool(data);
+                console.log(data);
+                    //  移除全部的項目
+                    $("#select_visit option").remove();
+                    $("#select_host option").remove();
+                for (var i in data) 
+                {
+                    console.log(data[i].id + ",  " + data[i].name );
+                    $("#select_visit").append($("<option></option>").attr("value", data[i].name).text(data[i].name));                
+                    $("#select_host").append($("<option></option>").attr("value", data[i].name).text(data[i].name));                
+                }        
+            } ,
+            dataType: "json"
+        });
+
+} 
+
+function fillSelSchoolByCup(){
+   console.log(getCookie("cup_val"));
+//        alert(getCookie("cup_val"));
+    $.ajax({
+        type: "GET",
+        url: "/schools/byCup?cup_id="+getCookie("cup_val"),  // byCup
+        success:function(data) {
+                console.log(data);
+                updateSelSchool(data);
+                //  移除全部的項目
+                $("#select_visit option").remove();
+                $("#select_host option").remove();
+                for (var i in data) 
+                {
+                    console.log(data[i].id + ",  " + data[i].name );
+                    $("#select_visit").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
+                    $("#select_host").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
+                }        
+            } ,
+            dataType: "json"
+        });
+} 
+
 $(document).ready(function() {
         setCookie("cup_val", $('#select_cup').val(), 1);
         //alert(getCookie("cup_val"));
-        $.ajax({
-            type: "GET",
-            url: "/schools/all?cup_id="+getCookie("cup_val"), 
-            success:function(data) {
-                // $('#save_message').html(data.message);
-                console.log(data);
-                        //  移除全部的項目
-                $("#select_school option").remove();
-                    for (var i in data) 
-                    {
-                        console.log(data[i].id + ",  " + data[i].name );
-                        $("#select_school").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
-                    }        
-                } ,
-                dataType: "json"
-            });
-
+        fillSelSchoolByCup2();
         $.ajax({
             type: "GET",
             url: "/matches/all?cup_id="+getCookie("cup_val"), 
@@ -197,7 +228,6 @@ $(document).ready(function() {
                 } ,
                 dataType: "json"
             });
-            
         setCookie("school_val", $('#select_school').val(), 1);    
         if ( getCookie("school_val") == null){
             setCookie("school_val", 1, 1);    
@@ -210,19 +240,172 @@ $(document).ready(function() {
             } ,
                 dataType: "json"
             });
-
+       /*     
        $(".edtLog").click(function(){ //[href~='pitcher']
              alert('edit log');    
              console.log($(this).data( "q-pid" )) ;
              console.log(getCookie("match_val"));
             });    
-     
-        
+            */
 })
 
-$(document).on('click', '.edtLog', function(){ 
-      alert('edit log');  
+//單筆維護
+$(document).on('click', '.edtMaster', function(){ 
+    //判斷型別，xx決定開那一個圈
+    console.log($(this).data( "type" )) ;
+    console.log($(this).data( "id" )) ;
+    
+    console.log($('#select_cup').val()) ;
+    //抓資料，填入form
+    if ($(this).data("type")=='cup' ){
+        var cid= $(this).data( "id" )?$(this).data( "id" ) :$('#select_cup').val();
+        $.ajax({
+            type: "GET",
+            url: "/cups/"+cid,  //$(this).data( "id" )
+            success:function(data) {
+                console.log(data);
+                console.log(data['id'] +'---------'+data['cupname'] );
+                //data[i].id + ",  " + data[i].name 
+                $('#cupname').val(data['cupname']);
+                $('#place').val(data['place']);
+                $('#creator').val(data['creator']);
+                $('#junior').val(data['junior']);
+                $('#cid').val(data['id']);
+            } ,
+            dataType: "json"
+            });
+    }else if ($(this).data("type")=='school' ){
+        var sid= $(this).data( "id" )?$(this).data( "id" ) :$('#select_school').val();
+        $.ajax({
+            type: "GET",
+            url: "/schools/"+sid,  //$(this).data( "id" )
+            success:function(data) {
+                console.log(data);
+                console.log(data['id'] +'---------'+data['name'] );
+                //data[i].id + ",  " + data[i].name 
+                $('#schoolname').val(data['name']);
+                $('#sid').val(data['id']);
+            } ,
+            dataType: "json"
+            });
+    } else {
+        var mid= $(this).data( "id" )?$(this).data( "id" ) :$('#select_match').val();
+        console.log("match edited");
+        $.ajax({
+            type: "GET",
+            url: "/matches/"+mid+"/edit",  //$(this).data( "id" )
+            success:function(data) {
+//                console.log(data);
+                //fillSelSchoolByCup2();
+                //data[i].id + ",  " + data[i].name 
+                console.log(data['id'] +'---------'+data['visit_name'] );
+                console.log(data['id'] +'---------'+data['host_name'] );
+                $('#holded_at').val(data['holded_at']);
+                $('#begin_time_set').val(data['begin_time_set']);
+                $('#game_order').val(data['game_order']);
+                //$("#select_visit select").val(data['visit_name']);
+                $("#select_visit").val(data['visit_name']);
+                //$("#select_host select").val(data['host_name']);
+                $("#select_host").val(data['host_name']);
+                $('#mid').val(data['mid']);
+            } ,
+            dataType: "json"
+            });
 
+    }
+    //**開窗
+
+});
+
+//單筆刪除
+$(document).on('click', '.delMaster', function(){ 
+    if ($(this).data("type")=='cup' ){
+        var cid= $(this).data( "id" )?$(this).data( "id" ) :$('#select_cup').val();
+        $.ajax({
+            type: "DELETE",
+            url: "/cups/"+cid,  //$(this).data( "id" )
+            success:function(data) {
+                console.log(data);
+                console.log(data['id'] +'---------'+data['cupname'] );
+                updateSelCup(data);
+            } ,
+            dataType: "json"
+            });
+    }else if ($(this).data("type")=='school' ){
+        var sid= $(this).data( "id" )?$(this).data( "id" ) :$('#select_school').val();
+        $.ajax({
+            type: "DELETE",
+            url: "/schools/"+sid,  //$(this).data( "id" )
+            success:function(data) {
+                console.log(data);
+                console.log(data['id'] +'---------'+data['cupname'] );
+                updateSelSchool(data);
+            } ,
+            dataType: "json"
+            });
+    } else {
+        var mid= $(this).data( "id" )?$(this).data( "id" ) :$('#select_match').val();
+        $.ajax({
+            type: "DELETE",
+            url: "/matches/"+mid,  //$(this).data( "id" )
+            success:function(data) {
+                console.log(data);
+                console.log(data['id'] +'---------'+data['cupname'] );
+                updateSelMatch(data);
+            } ,
+            dataType: "json"
+            });
+    }
+});
+
+
+//多筆維護
+$(document).on('click', '.edtDetail', function(){ 
+    //判斷型別，決定開那一個圈
+    if ($(this).data("type")=='log' ){
+        var lid= $(this).data( "id" );// ?$(this).data( "id" ) :$('#select_cup').val();
+        var inn= $(this).data( "inning" );
+        console.log(lid);
+        $.ajax({
+            type: "GET",
+            url: "/pitchers/"+lid,  //$(this).data( "id" )
+            success:function(data) {
+                console.log(data);
+                $('#inning_id').val(data['inning_id']);
+                $('#defender_id').val(data['defender_id']);
+                $('#attacker_id').val(data['attacker_id']);
+                $("#catcher").val(data['catcher']);
+                $("#p_result").val(data['p_result']);
+                $("#a_result").val(data['a_result']);
+                $("#d_result").val(data['d_result']);
+                $("#outs").val(data['outs']);
+                $("#defense").val(data['defense']);
+                $("#defense2").val(data['defense2']);
+                $("#run").val(data['run']);
+                $('#lid').val(data['id']);
+            } ,
+            dataType: "json"
+            });
+    }    //抓資料，填入form
+
+    //開窗
+
+    //key值不要秀出來，那些值不秀呢?設唯讀，還是秀
+    //存檔，寫入
+
+
+
+});
+
+
+$(document).on('click', '.delDetail', function(){ 
+      alert('edit log');  
+//判斷型別，
+//走不同的url
+//類似
+
+//不想刪，有機會反悔
+//確認，就直接刪掉
 
 
 
@@ -262,29 +445,21 @@ function getCookie(cname) {
     $('#select_cup').on('change', function() {
     //alert( this.value );
         setCookie("cup_val", this.value, 1);
-        alert(getCookie("cup_val"));
-        $.ajax({
-            type: "GET",
-            url: "/schools/all?cup_id="+getCookie("cup_val"), 
-            success:function(data) {
-                // $('#save_message').html(data.message);
-                    console.log(data);
-                        //  移除全部的項目
-                    $("#select_school option").remove();
-                    for (var i in data) 
-                    {
-                        console.log(data[i].id + ",  " + data[i].name );
-                        $("#select_school").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
-                    }        
-                } ,
-                dataType: "json"
-            });
+        console.log(getCookie("cup_val"));
+        $('#eBtnCup').data('id',this.value);        
+        $('#dBtnCup').data('id',this.value);        
+    //更新 id 屬性，給edit/delete 用
+
+    fillSelSchoolByCup2();
     });
 //選學校
     $('#select_school').on('change blur', function() {
     //alert( this.value );
         setCookie("school_val", this.value, 1);
+        $('#eBtnSchool').data('id',this.value);        
+        $('#dBtnSchool').data('id',this.value);        
         //alert(getCookie("school_val"));
+    //更新 id 屬性，給edit/delete 用
         $.ajax({
             type: "GET",
             url: "/students/all?school_id="+getCookie("school_val"), 
@@ -296,8 +471,12 @@ function getCookie(cname) {
     });
 //選對戰組合
     $('#select_match').on('change blur', function() {
-    //alert( this.value );
-      //  setCookie("school_val", this.value, 1);
+        //alert( this.value );
+        setCookie("match_val", this.value, 1);
+        //更新 id 屬性，給edit/delete 用
+        $('#eBtnMatch').data('id',this.value);        
+        $('#dBtnMatch').data('id',this.value);        
+
         //alert(getCookie("school_val"));
         $.ajax({
             type: "GET",
@@ -358,7 +537,6 @@ function getCookie(cname) {
                     $("#select_defense2").append($("<option></option>").attr("value", "X").text(" **無"));
                 if (inn.indexOf('U') >= 0){ //上半局
                     console.log("上半局 inn :  " + inn );
-                    
                     for (var i in data) {
                         if (data[i].hv=='V' ) {
                             $("#select_attacker").append($("<option></option>").attr("value", data[i].id).text(data[i].hitorder+'  '+data[i].backno+'  **'+data[i].name));                
@@ -372,10 +550,8 @@ function getCookie(cname) {
                             }
                         }
                     } 
-                           
                 } else { //下半局
                     console.log("下半局 inn :  " + inn );
-                    
                     for (var i in data) {
                         if (data[i].hv=='H' ) {
                             $("#select_attacker").append($("<option></option>").attr("value", data[i].id).text(data[i].hitorder+'  '+data[i].backno+'  **'+data[i].name));                
@@ -389,7 +565,6 @@ function getCookie(cname) {
                             }
                         }
                     }
-                            
                 }
             } ,
             dataType: "json"
@@ -398,70 +573,107 @@ function getCookie(cname) {
 //------------------------------------------------------------------------------------------------------------------    
 //  新增區
 //  新增盃賽
+function updateSelCup(data){
+    //  移除全部的項目
+    $("#select_cup option").remove();
+    for (var i in data) 
+    {
+        console.log(data[i].id + ",  " + data[i].cupname );
+        $("#select_cup").append($("<option></option>").attr("value", data[i].id).text(data[i].cupname));                
+    }        
+}
+
  $('#addCup').click(function(){    
     var cname=$('#cupname').val();
     var place=$('#place').val();
     var creator=$('#creator').val();
     var junior=$('#junior').val();
-        /*
-            $.post('/cups/store',{cupname:cname,place:place,creator:creator,junior:junior},function(data){
-                console.log(data);
-                var json = data;
-                console.log(json);
-                //data.forEach(function(obj) { console.log(obj.id); });
-                console.log(json.length);
-                for(var i = 0; i < data.length; i++) {
-                    var obj = data[i];
+    if ($('#cid').val()) {
+        $.ajax({
+                type: "PUT",
+                url: "/cups/"+$('#cid').val(), 
+                data: {cupname:cname,place:place,creator:creator,junior:junior},
+                success:function(data) {
+                // $('#save_message').html(data.message);
+                    console.log(data);
+                    updateSelCup(data);
+                } ,
+                dataType: "json"
+            });
 
-                    console.log(obj.id);
-                // console.log(obj.cupname);
-                }        
-                //$('#postRequestData').html(data);
-
-            })
-        */
-   $.ajax({
-        type: "POST",
-        url: "/cups/store", 
-        data: {cupname:cname,place:place,creator:creator,junior:junior},//{'cupname':$('input[name=cupname]').val(),'place':$('input[name=place]').val(),'creator':$('input[name=creator]').val(),'junior':$('input[name=junior]').val(), '_token': $('input[name=_token]').val()},
-        //contentType: "json",
-        //processData: false,
-        success:function(data) {
-        // $('#save_message').html(data.message);
-            console.log(data);
-                //  移除全部的項目
-                $("#select_cup option").remove();
-            for (var i in data) 
-            {
-                console.log(data[i].id + ",  " + data[i].cupname );
-                $("#select_cup").append($("<option></option>").attr("value", data[i].id).text(data[i].cupname));                
-            }        
-        } ,
-        dataType: "json"
-    });
-    
+    } else {
+        $.ajax({
+                type: "POST",
+                url: "/cups/store", 
+                data: {cupname:cname,place:place,creator:creator,junior:junior},//{'cupname':$('input[name=cupname]').val(),'place':$('input[name=place]').val(),'creator':$('input[name=creator]').val(),'junior':$('input[name=junior]').val(), '_token': $('input[name=_token]').val()},
+                //contentType: "json",
+                //processData: false,
+                success:function(data) {
+                // $('#save_message').html(data.message);
+                    console.log(data);
+                    updateSelCup(data);
+                } ,
+                dataType: "json"
+            });
+    }
  }); 
-//新增學校
+
+
+
+function updateSelSchool(data){
+        //  移除全部的項目
+    $("#select_school option").remove();
+    for (var i in data) 
+    {
+        console.log(data[i].id + ",  " + data[i].name );
+        $("#select_school").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
+    } 
+}
+
+//新增(儲存)學校
  $('#addSchool').click(function(){    
     var sname=$('#schoolname').val();
     var cid = getCookie("cup_val");
-  $.ajax({
-        type: "POST",
-        url: "/schools/store", 
-        data: {schoolname:sname,cup_id:cid},//{'cupname':$('input[name=cupname]').val(),'place':$('input[name=place]').val(),'creator':$('input[name=creator]').val(),'junior':$('input[name=junior]').val(), '_token': $('input[name=_token]').val()},
-        success:function(data) {
-            console.log(data);
-                //  移除全部的項目
-            $("#select_school option").remove();
-            for (var i in data) 
-            {
-                console.log(data[i].id + ",  " + data[i].name );
-                $("#select_school").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
-            } 
-        } ,
-        dataType: "json"
-    });
- });    
+    if ($('#sid').val()) {
+        $.ajax({
+                type: "PUT",
+                url: "/schools/"+$('#sid').val(), 
+                data: {schoolname:sname},
+                success:function(data) {
+                // $('#save_message').html(data.message);
+                    console.log(data);
+                    updateSelSchool(data);
+                } ,
+                dataType: "json"
+            });
+
+    } else {
+        $.ajax({
+                type: "POST",
+                url: "/schools/store", 
+                data: {schoolname:sname,cup_id:cid},//{'cupname':$('input[name=cupname]').val(),'place':$('input[name=place]').val(),'creator':$('input[name=creator]').val(),'junior':$('input[name=junior]').val(), '_token': $('input[name=_token]').val()},
+                success:function(data) {
+                    console.log(data);
+                    updateSelSchool(data);
+                } ,
+                dataType: "json"
+            });
+    }
+ }); 
+
+$('#aBtnSchool').click(function(){    
+ $('#sid').val(null);
+ $('#schoolname').val(null);
+}); 
+
+
+$('#aBtnLog').click(function(){    
+ //$('#lid').val(null);
+ //$('#schoolname').val(null);
+}); 
+
+
+
 //新增學生
 $('#addStudent').click(function(){ 
     var sname=$('#studentname').val();
@@ -476,6 +688,27 @@ $('#addStudent').click(function(){
         });
     
  });    
+
+function updateSelMatch(data){
+    //  移除全部的項目
+    $("#select_match option").remove();
+    for (var i in data) 
+    {
+        console.log(data[i].id + ",  " + data[i].visit_name+ ",  " + data[i].host_name );
+        $("#select_match").append($("<option></option>").attr("value", data[i].id).text(data[i].visit_name+' VS '+data[i].host_name    ));                
+    } 
+
+};
+
+$('#aBtnMatch').click(function(){    
+ $('#mid').val(null);
+ $('#holded_at').val(null);
+ $('#begin_time_set').val(null);
+ $('#game_order').val(null);
+ $('#select_visit').val(null);
+ $('#select_host').val(null);
+ 
+}); 
  
 //新增對戰
  $('#addMatch').click(function(){    
@@ -486,23 +719,29 @@ $('#addStudent').click(function(){
     var host_name=$('#select_host option:selected').text();
     
     var cid = getCookie("cup_val");
-  $.ajax({
-        type: "POST",
-        url: "/matches/store", 
-        data: {holded_at:holded_at,begin_time_set:begin_time_set,game_order:game_order,visit_name:visit_name,host_name:host_name,cid:cid},
-        success:function(data) {
-            console.log(data);
-                //  移除全部的項目
-            $("#select_match option").remove();
-            for (var i in data) 
-            {
-                console.log(data[i].id + ",  " + data[i].visit_name+ ",  " + data[i].host_name );
-                $("#select_match").append($("<option></option>").attr("value", data[i].id).text(data[i].visit_name+' VS '+data[i].host_name    ));                
-            } 
-        } ,
-        dataType: "json"
-    });
-    
+    if ($('#mid').val()) {
+        $.ajax({
+                type: "PUT",
+                url: "/matches/"+$('#mid').val(), 
+                data: {schoolname:sname},
+                success:function(data) {
+                    console.log(data);
+                    updateSelMatch(data)
+                } ,
+                dataType: "json"
+            });
+    } else {
+        $.ajax({
+                type: "POST",
+                url: "/matches/store", 
+                data: {holded_at:holded_at,begin_time_set:begin_time_set,game_order:game_order,visit_name:visit_name,host_name:host_name,cid:cid},
+                success:function(data) {
+                    console.log(data);
+                    updateSelMatch(data)
+                } ,
+                dataType: "json"
+            });
+    }
  });    
 
 //新增選手
@@ -531,36 +770,36 @@ $('#addStudent').click(function(){
 
 //新增記錄
  $('#addLog').click(function(){    
-    //setCookie("match_val", $('#select_match').val(), 1); 
-    var inn=$('#select_inning').val();
-    var defender=$('#select_defender option:selected').text();
-         defender = defender.split("**")[1];
-    var attacker=$('#select_attacker option:selected').text();
-        attacker = attacker.split("**")[1];
-    var catcher=$('#select_catcher option:selected').text();
-         catcher = catcher.split("**")[1];
-    var p_result=$('#select_p_result option:selected').text();
-    var a_result=$('#select_a_result option:selected').text();
-    var d_result=$('#select_d_result option:selected').text();
-    var outs=$('#select_outs').val();
-    var defense=$('#select_defense option:selected').text();
-        defense = defense.split("**")[1];
-    var defense2=$('#select_defense2 option:selected').text();
-        defense2 = defense2.split("**")[1];
-    var run=$('#select_run').val();
-    
-    var mid = getCookie("match_val");
-    console.log(mid);
-  $.ajax({
-        type: "POST",
-        url: "/pitchers/store", 
-        data: {inn:inn,defender:defender,attacker:attacker,catcher:catcher,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,run:run,mid:mid},
-        success:function(data) {
-            console.log(data);
-             fillLog(data);
-        } ,
-        dataType: "json"
-    });
+
+        var inn=$('#select_inning').val();
+        var defender=$('#select_defender option:selected').text();
+            defender = defender.split("**")[1];
+        var attacker=$('#select_attacker option:selected').text();
+            attacker = attacker.split("**")[1];
+        var catcher=$('#select_catcher option:selected').text();
+            catcher = catcher.split("**")[1];
+        var p_result=$('#select_p_result option:selected').text();
+        var a_result=$('#select_a_result option:selected').text();
+        var d_result=$('#select_d_result option:selected').text();
+        var outs=$('#select_outs').val();
+        var defense=$('#select_defense option:selected').text();
+            defense = defense.split("**")[1];
+        var defense2=$('#select_defense2 option:selected').text();
+            defense2 = defense2.split("**")[1];
+        var run=$('#select_run').val();
+        
+        var mid = getCookie("match_val");
+        console.log(mid);
+        $.ajax({
+                type: "POST",
+                url: "/pitchers/store", 
+                data: {inn:inn,defender:defender,attacker:attacker,catcher:catcher,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,run:run,mid:mid},
+                success:function(data) {
+                    console.log(data);
+                    fillLog(data);
+                } ,
+                dataType: "json"
+            });
  });    
 
 //填入賽事記錄 表格
@@ -590,12 +829,12 @@ function fillLog(data){
             s_html+=  '    <td>'+data[i].p_result+'</td>';
             s_html+=  '    <td>'+data[i].outs+'</td>';
             s_html+=  '    <td>'+data[i].run+'</td>';
-            s_html+=  '    <td><button type="button" data-q-pid="'+data[i].id+'" class="edtLog btn btn-warning btn-xs" id="edtLog_'+data[i].id+'" >編輯</button>';
-           // s_html+=  '    <td><a href="/pitchers/'+data[i].id+'" data-q-pid="'+data[i].id+'" class="edtLog  btn btn-warning btn-xs" id="edtLog_'+data[i].id+'" >編輯</a>';
-            s_html+=  '        <button type="button" data-d-pid="'+data[i].id+'"class="delLog  btn btn-success btn-xs" id="delLog_'+data[i].id+'" >刪除</button></td></tr>';
+            s_html+=  '    <td><button type="button" class="edtDetail btn btn-warning btn-xs" data-inning="'+data[i].inning_id+'"  data-type="log" data-id="'+data[i].id+'" data-toggle="modal" data-target="#edtLogger">編輯</button>';
+            s_html+=  '        <button type="button" data-d-pid="'+data[i].id+'"class="delDetail  btn btn-success btn-xs" id="delLog_'+data[i].id+'" >刪除</button></td></tr>';
             //console.log(data[i].hitorder + ",  " + data[i].name );
     } 
     s_html+="</tbody> ";
+    console.log(s_html);
     $("#clog").html(s_html) ;
 }
 
@@ -701,34 +940,39 @@ $('#newStudent').click(function(){
     setCookie("school_val", $('#select_school').val());
     //alert(getCookie("school_val"));
     console.log(getCookie("school_val"));
- });    
+ }); 
+
 //開窗: 對戰窗
 $('#newMatch').click(function(){ 
-   console.log(getCookie("cup_val"));
-//        alert(getCookie("cup_val"));
+    fillSelSchoolByCup2();
+ });    
+
+$("#edtLog").click(function(){ //[href~='pitcher'] 
+//    if ($('#lid').val()){ //編輯
+    var inn=$('#inning_id').val();
+    var defender=$('#defender_id').val();
+    var attacker=$('#attacker_id').val();
+    var catcher=$('#catcher').val();
+    var p_result=$('#p_result').val();
+    var a_result=$('#a_result').val();
+    var d_result=$('#d_result').val();
+    var outs=$('#outs').val();
+    var defense=$('#defense').val();
+    var defense2=$('#defense2').val();
+    var run=$('#run').val();
+    var mid = getCookie("match_val");
+    console.log(mid);
     $.ajax({
-        type: "GET",
-        url: "/schools/all?cup_id="+getCookie("cup_val"), 
-        success:function(data) {
-            // $('#save_message').html(data.message);
+            type: "PUT",
+            url: "/pitchers/"+$('#lid').val(), 
+            data: {inn:inn,defender:defender,attacker:attacker,catcher:catcher,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,run:run,mid:mid},
+            success:function(data) {
                 console.log(data);
-                    //  移除全部的項目
-                    $("#select_visit option").remove();
-                    $("#select_host option").remove();
-                for (var i in data) 
-                {
-                    console.log(data[i].id + ",  " + data[i].name );
-                    $("#select_visit").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
-                    $("#select_host").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
-                }        
+                fillLog(data);
             } ,
             dataType: "json"
         });
- });    
 
-$(".edtLog").click(function(){ //[href~='pitcher'] 
-    console.log($(this).data( "q-pid" )) ;
-    console.log(getCookie("match_val"));
  });    
 
 $("[data-d-pid]").click(function(){ 
@@ -750,7 +994,7 @@ function onSubmit( form ){
 */
 
 var data = {
-    labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
+    labels: ["1B 一安", "2B 二安", "3B 二安", "HR 全壘打", "GO 滾地球出局", "AO 飛球出局", "K 三振","GIDP 雙殺打","R 得分","RBI 打點"],
     datasets: [
         {
             label: "My First dataset",
@@ -760,7 +1004,7 @@ var data = {
             pointBorderColor: "#fff",
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: [65, 59, 90, 81, 56, 55, 40]
+            data: [65, 59, 90, 81, 56, 55, 40, 56, 55, 40]
         },
         {
             label: "My Second dataset",
@@ -770,10 +1014,37 @@ var data = {
             pointBorderColor: "#fff",
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(255,99,132,1)",
-            data: [28, 48, 40, 19, 96, 27, 100]
+            data: [28, 48, 40, 19, 96, 27, 100, 96, 27, 100]
         }
     ]
 };
+
+var data = {
+    labels: ["1B 一安", "2B 二安", "3B 二安", "HR 全壘打", "GO 滾地球出局", "AO 飛球出局", "K 三振","GIDP 雙殺打","HBP 觸身球","RBI 打點"],
+    datasets: [
+        {
+            label: "My First dataset",
+            backgroundColor: "rgba(179,181,198,0.2)",
+            borderColor: "rgba(179,181,198,1)",
+            pointBackgroundColor: "rgba(179,181,198,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(179,181,198,1)",
+            data: [65, 59, 90, 81, 56, 55, 40, 56, 55, 40]
+        },
+        {
+            label: "My Second dataset",
+            backgroundColor: "rgba(255,99,132,0.2)",
+            borderColor: "rgba(255,99,132,1)",
+            pointBackgroundColor: "rgba(255,99,132,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(255,99,132,1)",
+            data: [28, 48, 40, 19, 96, 27, 100, 96, 27, 100]
+        }
+    ]
+};
+
 
  var options= {
             scale: {
