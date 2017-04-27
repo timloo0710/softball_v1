@@ -37,6 +37,7 @@
                     <option value="7">第7棒</option>
                     <option value="8">第8棒</option>
                     <option value="9">第9棒</option>
+                    <option value="R">代打</option>
                     <option value="0">專任投手</option>
                 </select>
             </div>
@@ -48,7 +49,7 @@
                 <!--input type="text" name="pos" id="pos" class="form-control" value="{{ old('pos') }}"-->
                 <select class="form-control" id="select_pos">
                     <option value="P">投手</option>
-                    <option value="C">補手</option>
+                    <option value="C">捕手</option>
                     <option value="1B">1壘手</option>
                     <option value="2B">2壘手</option>
                     <option value="3B">3壘手</option>
@@ -57,6 +58,8 @@
                     <option value="CF">中外野手</option>
                     <option value="LF">左外野手</option>
                     <option value="DP">指定打擊</option>
+                    <option value="X">無</option>
+
                 </select>
             </div>
         </div>
