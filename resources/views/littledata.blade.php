@@ -3,6 +3,9 @@
 @section('thisMatch')
 <div class="container" id="">
     <div class="row">
+    </div>
+
+    <div class="row">
         <div class="col-xs-6 col-sm-4"><canvas id="myChart1" ></canvas></div>
         <div class="col-xs-6 col-sm-4"><canvas id="myChart2" ></canvas></div>
         <!-- Optional: clear the XS cols if their content doesn't match in height -->

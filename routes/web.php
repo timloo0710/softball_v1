@@ -297,13 +297,13 @@ Route::put('/pitchers/{id}', function ($id,Request $request) {
     $pitcher->inning_id = $request->inn;
     $pitcher->defender_id = $request->defender;
     $pitcher->attacker_id = $request->attacker;
-    $pitcher->catcher = $request->catcher;
     $pitcher->p_result = $request->p_result;
     $pitcher->a_result = $request->a_result;
     $pitcher->d_result = $request->d_result;
     $pitcher->outs = $request->outs;
     $pitcher->defense = $request->defense;
     $pitcher->defense2 = $request->defense2;
+    $pitcher->defense3 = $request->defense3;
     $pitcher->run = $request->run;
     $pitcher->save();
     $mid = $request->mid;
@@ -318,7 +318,6 @@ Route::post('/pitchers/store', function(Request $request){
         $pitcher->inning_id = $request->inn;
         $pitcher->defender_id = $request->defender;
         $pitcher->attacker_id = $request->attacker;
-        $pitcher->catcher = $request->catcher;
         $pitcher->passedball = "無";
         $pitcher->p_result = $request->p_result;
         $pitcher->a_result = $request->a_result;
@@ -326,7 +325,8 @@ Route::post('/pitchers/store', function(Request $request){
         $pitcher->outs = $request->outs;
         $pitcher->defense = $request->defense;
         $pitcher->defense2 = $request->defense2;
-        $pitcher->defense3 = "無";
+        $pitcher->defense3 = $request->defense3;
+        //$pitcher->defense3 = "無";
         $pitcher->home = "無";
         $pitcher->run = $request->run;
         $pitcher->match_id = $request->input('mid');
@@ -358,6 +358,11 @@ Route::delete('/pitchers/{id}', function ($id) {
 
     $matches = App\Match::select('id','visit_name','host_name','game_order')->get(); //->where('cup_id', $cid )
     return $matches->toJson();
+});
+
+Route::get('/totals/host', function () {
+    $pitcher = App\Pitcher::findOrFail($id);
+    return $pitcher->toJson();
 });
 
 

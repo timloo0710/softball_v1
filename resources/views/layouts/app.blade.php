@@ -497,26 +497,103 @@ function getCookie(cname) {
             });
     });
 
+function refreshHV(data){
+    console.log(data);
+    $("#select_hv_names option").remove();
+    for (var i in data) 
+        {
+        console.log(data[i].id + ",  " + data[i].name );
+        $("#select_hv_names").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
+        }        
+
+}
+
+$('#btnRefreshPlayer').click(function() {
+    $.ajax({
+    type: "GET",
+    url: "/students/hv?match_id="+$('#select_match').val()+"&hv="+$('#select_hv').val(), 
+    success:function(data) {
+        refreshHV(data);
+    } ,
+    dataType: "json"
+    });
     
+});
+
+
 //選先攻後攻
-    $('#select_hv').on('change', function() {
+    $('#select_hv').on('change blur', function() {
         setCookie("match_val", $('#select_match').val(), 1); 
         console.log(getCookie("match_val"));
         $.ajax({
             type: "GET",
             url: "/students/hv?match_id="+getCookie("match_val")+"&hv="+this.value, 
             success:function(data) {
-            console.log(data);
-            $("#select_hv_names option").remove();
-            for (var i in data) 
-                {
-                console.log(data[i].id + ",  " + data[i].name );
-                $("#select_hv_names").append($("<option></option>").attr("value", data[i].id).text(data[i].name));                
-                }        
+                refreshHV(data);
             } ,
             dataType: "json"
         });
     });
+
+
+$('#btnRefreshInn').click(function() {
+        $.ajax({
+        type: "GET",
+        url: "/players/all?mid="+getCookie("match_val"), //+"&hv="+this.value
+        success:function(data) {
+            refreshInn(data);                
+        } ,
+        dataType: "json"
+    });
+});
+
+function refreshInn(data){
+    var inn = $('#select_inning').val();
+    var attack_html;
+    var defend_html;                
+        $("#select_attacker option").remove();
+        $("#select_defender option").remove();
+        $("#select_defense option").remove();
+        $("#select_defense").append($("<option></option>").attr("value", "X").text(" **無"));
+        $("#select_defense2 option").remove();
+        $("#select_defense2").append($("<option></option>").attr("value", "X").text(" **無"));
+        $("#select_defense3 option").remove();
+        $("#select_defense3").append($("<option></option>").attr("value", "X").text(" **無"));
+    if (inn.indexOf('U') >= 0){ //上半局
+        console.log("上半局 inn :  " + inn );
+        for (var i in data) {
+            if (data[i].hv=='V' ) {
+                $("#select_attacker").append($("<option></option>").attr("value", data[i].id).text(data[i].hitorder+'  '+data[i].backno+'  **'+data[i].name));                
+            } else { //守備
+                if ((data[i].pos=='P') ){ //|| (data[i].pos=='C')
+                    $("#select_defender").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                } 
+                $("#select_defense").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                $("#select_defense2").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                $("#select_defense3").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                
+            }
+        } 
+    } else { //下半局
+        console.log("下半局 inn :  " + inn );
+        for (var i in data) {
+            if (data[i].hv=='H' ) {
+                $("#select_attacker").append($("<option></option>").attr("value", data[i].id).text(data[i].hitorder+'  '+data[i].backno+'  **'+data[i].name));                
+            } else { //守備
+                if ((data[i].pos=='P') ){ //|| (data[i].pos=='C')
+                    $("#select_defender").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                } 
+                $("#select_defense").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                $("#select_defense2").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                $("#select_defense3").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
+                
+            }
+        }
+    }
+    
+};
+
+
 //選 上下半局 U是上半，找V 客隊，先攻隊，打者 的
     $('#select_inning').on('change blur', function() {
         console.log(getCookie("match_val"));
@@ -525,47 +602,7 @@ function getCookie(cname) {
             type: "GET",
             url: "/players/all?mid="+getCookie("match_val"), //+"&hv="+this.value
             success:function(data) {
-                var attack_html;
-                var defend_html;                
-                    $("#select_attacker option").remove();
-                    $("#select_defender option").remove();
-                    $("#select_catcher option").remove();
-                    $("#select_catcher").append($("<option></option>").attr("value", "X").text(" **無"));
-                    $("#select_defense option").remove();
-                    $("#select_defense").append($("<option></option>").attr("value", "X").text(" **無"));
-                    $("#select_defense2 option").remove();
-                    $("#select_defense2").append($("<option></option>").attr("value", "X").text(" **無"));
-                if (inn.indexOf('U') >= 0){ //上半局
-                    console.log("上半局 inn :  " + inn );
-                    for (var i in data) {
-                        if (data[i].hv=='V' ) {
-                            $("#select_attacker").append($("<option></option>").attr("value", data[i].id).text(data[i].hitorder+'  '+data[i].backno+'  **'+data[i].name));                
-                        } else { //守備
-                            if ((data[i].pos=='P') || (data[i].pos=='C')){
-                                $("#select_defender").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                                $("#select_catcher").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                            } else {
-                                $("#select_defense").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                                $("#select_defense2").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                            }
-                        }
-                    } 
-                } else { //下半局
-                    console.log("下半局 inn :  " + inn );
-                    for (var i in data) {
-                        if (data[i].hv=='H' ) {
-                            $("#select_attacker").append($("<option></option>").attr("value", data[i].id).text(data[i].hitorder+'  '+data[i].backno+'  **'+data[i].name));                
-                        } else { //守備
-                            if ((data[i].pos=='P') || (data[i].pos=='C')){
-                                $("#select_defender").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                                $("#select_catcher").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                            } else {
-                                $("#select_defense").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                                $("#select_defense2").append($("<option></option>").attr("value", data[i].id).text(data[i].pos+'  '+data[i].backno+'  **'+data[i].name));                
-                            }
-                        }
-                    }
-                }
+                refreshInn(data);                
             } ,
             dataType: "json"
         });
@@ -776,8 +813,8 @@ $('#aBtnMatch').click(function(){
             defender = defender.split("**")[1];
         var attacker=$('#select_attacker option:selected').text();
             attacker = attacker.split("**")[1];
-        var catcher=$('#select_catcher option:selected').text();
-            catcher = catcher.split("**")[1];
+       // var catcher=$('#select_catcher option:selected').text();
+       //     catcher = catcher.split("**")[1];
         var p_result=$('#select_p_result option:selected').text();
         var a_result=$('#select_a_result option:selected').text();
         var d_result=$('#select_d_result option:selected').text();
@@ -786,14 +823,17 @@ $('#aBtnMatch').click(function(){
             defense = defense.split("**")[1];
         var defense2=$('#select_defense2 option:selected').text();
             defense2 = defense2.split("**")[1];
+        var defense3=$('#select_defense3 option:selected').text();
+            defense3 = defense3.split("**")[1];
+            
         var run=$('#select_run').val();
         
         var mid = getCookie("match_val");
         console.log(mid);
         $.ajax({
                 type: "POST",
-                url: "/pitchers/store", 
-                data: {inn:inn,defender:defender,attacker:attacker,catcher:catcher,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,run:run,mid:mid},
+                url: "/pitchers/store",   //catcher:catcher,
+                data: {inn:inn,defender:defender,attacker:attacker,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,defense3:defense3,run:run,mid:mid},
                 success:function(data) {
                     console.log(data);
                     fillLog(data);
@@ -843,6 +883,7 @@ function fillLog(data){
 
 //填入球員 表格
 function fillPlayer(data){
+    console.log('--------------------fillPlayer----------------------------------------------');
     console.log(data);
     var s_html="";
     var host_html="";
@@ -952,20 +993,21 @@ $("#edtLog").click(function(){ //[href~='pitcher']
     var inn=$('#inning_id').val();
     var defender=$('#defender_id').val();
     var attacker=$('#attacker_id').val();
-    var catcher=$('#catcher').val();
+   //var catcher=$('#catcher').val();
     var p_result=$('#p_result').val();
     var a_result=$('#a_result').val();
     var d_result=$('#d_result').val();
     var outs=$('#outs').val();
     var defense=$('#defense').val();
     var defense2=$('#defense2').val();
+    var defense3=$('#defense3').val();
     var run=$('#run').val();
     var mid = getCookie("match_val");
     console.log(mid);
     $.ajax({
             type: "PUT",
             url: "/pitchers/"+$('#lid').val(), 
-            data: {inn:inn,defender:defender,attacker:attacker,catcher:catcher,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,run:run,mid:mid},
+            data: {inn:inn,defender:defender,attacker:attacker,defense3:defense3,p_result:p_result,a_result:a_result,d_result:d_result,outs:outs,defense:defense,defense2:defense2,run:run,mid:mid},
             success:function(data) {
                 console.log(data);
                 fillLog(data);
@@ -1005,45 +1047,10 @@ var data = {
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(179,181,198,1)",
             data: [65, 59, 90, 81, 56, 55, 40, 56, 55, 40]
-        },
-        {
-            label: "My Second dataset",
-            backgroundColor: "rgba(255,99,132,0.2)",
-            borderColor: "rgba(255,99,132,1)",
-            pointBackgroundColor: "rgba(255,99,132,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(255,99,132,1)",
-            data: [28, 48, 40, 19, 96, 27, 100, 96, 27, 100]
         }
     ]
 };
 
-var data = {
-    labels: ["1B 一安", "2B 二安", "3B 二安", "HR 全壘打", "GO 滾地球出局", "AO 飛球出局", "K 三振","GIDP 雙殺打","HBP 觸身球","RBI 打點"],
-    datasets: [
-        {
-            label: "My First dataset",
-            backgroundColor: "rgba(179,181,198,0.2)",
-            borderColor: "rgba(179,181,198,1)",
-            pointBackgroundColor: "rgba(179,181,198,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: [65, 59, 90, 81, 56, 55, 40, 56, 55, 40]
-        },
-        {
-            label: "My Second dataset",
-            backgroundColor: "rgba(255,99,132,0.2)",
-            borderColor: "rgba(255,99,132,1)",
-            pointBackgroundColor: "rgba(255,99,132,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(255,99,132,1)",
-            data: [28, 48, 40, 19, 96, 27, 100, 96, 27, 100]
-        }
-    ]
-};
 
 
  var options= {

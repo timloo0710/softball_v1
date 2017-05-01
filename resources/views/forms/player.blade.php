@@ -20,6 +20,7 @@
                     <option value="V">先攻</option>
                     <option value="H">先守</option>
                 </select>
+                <i class="fa fa-btn fa-refresh" id="btnRefreshPlayer"></i>
             </div>
         </div>
         <!--  Name -->

@@ -35,13 +35,6 @@
             </div>
             <!--  Name -->
             <div class="form-group">
-                <label for="cup-name" class="col-sm-3 control-label">補手(有效牽制)</label>
-                <div class="col-sm-6">
-                    <input type="text"  id="catcher" class="form-control" value="{{ old('catcher') }}">
-                </div>
-            </div>
-            <!--  Name -->
-            <div class="form-group">
                 <label for="cup-name" class="col-sm-3 control-label">投球後的狀態</label>
                 <div class="col-sm-6">
                     <input type="text"  id="p_result" class="form-control" value="{{ old('p_result') }}">
@@ -77,9 +70,16 @@
             </div>
             <!--  Name -->
             <div class="form-group">
-                <label for="cup-name" class="col-sm-3 control-label">協同守備二</label>
+                <label for="defense2" class="col-sm-3 control-label">協同守備二</label>
                 <div class="col-sm-6">
                     <input type="text"  id="defense2" class="form-control" value="{{ old('defense2') }}">
+                </div>
+            </div>
+            <!--  Name -->
+            <div class="form-group">
+                <label for="defense3" class="col-sm-3 control-label">協同守備三</label>
+                <div class="col-sm-6">
+                    <input type="text"  id="defense3" class="form-control" value="{{ old('defense3') }}">
                 </div>
             </div>
             <!--  Name -->

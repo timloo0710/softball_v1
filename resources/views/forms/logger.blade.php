@@ -30,7 +30,17 @@
                         <option value="6D">六局下</option>
                         <option value="7U">七局上</option>
                         <option value="7D">七局下</option>
-                        </select>                
+                        <option value="8U">八局上</option>
+                        <option value="8D">八局下</option>
+                        <option value="9U">九局上</option>
+                        <option value="9D">九局下</option>
+                        <option value="10U">十局上</option>
+                        <option value="10D">十局下</option>
+                        <option value="11U">十一局上</option>
+                        <option value="11D">十一局下</option>
+                        </select>  
+                <i class="fa fa-btn fa-refresh" id="btnRefreshInn"></i>
+                                      
                     </div>
                 </div>
                 <!--  Name -->
@@ -53,15 +63,6 @@
                 </div>
                 <!--  Name -->
                 <div class="form-group">
-                    <label for="cup-name" class="col-sm-3 control-label">補手(有效牽制)</label>
-                    <div class="col-sm-6">
-                        <!--input type="text" name="cupname" id="cup-name" class="form-control" value="{{ old('catcher') }}"-->
-                        <select class="form-control" id="select_catcher">
-                        </select>                
-                    </div>
-                </div>
-                <!--  Name -->
-                <div class="form-group">
                     <label for="cup-name" class="col-sm-3 control-label">投球後的狀態</label>
                     <div class="col-sm-6">
                         <!--input type="text" name="cupname" id="cup-name" class="form-control" value="{{ old('p_result') }}"-->
@@ -71,8 +72,11 @@
                             <option value="2B">二壘安打</option>
                             <option value="3B">三壘安打</option>
                             <option value="HR">被全壘打</option>
-                            <option value="AO">飛球出局</option>
-                            <option value="GO">滾球出局</option>
+                            <option value="SEL">野手選擇</option>
+                            <option value="AO">內野飛球出局</option>
+                            <option value="OAO">外野飛球出局</option>
+                            <option value="PGO">投手前滾球出局</option>
+                            <option value="FGO">內野滾球出局</option>
                             <option value="BB">四壞球</option>
                             <option value="IBB">故意四壞球</option>
                             <option value="SO">三振</option>
@@ -141,6 +145,15 @@
                     <div class="col-sm-6">
                         <!--input type="text" name="cupname" id="cup-name" class="form-control" value="{{ old('defense2') }}"-->
                         <select class="form-control" id="select_defense2">
+                        </select>
+                    </div>
+                </div>
+                <!--  Name -->
+                <div class="form-group">
+                    <label for="cup-name" class="col-sm-3 control-label">協同守備三</label>
+                    <div class="col-sm-6">
+                        <!--input type="text" name="cupname" id="cup-name" class="form-control" value="{{ old('defense2') }}"-->
+                        <select class="form-control" id="select_defense3">
                         </select>
                     </div>
                 </div>
