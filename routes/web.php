@@ -303,7 +303,7 @@ Route::put('/pitchers/{id}', function ($id,Request $request) {
     $pitcher->outs = $request->outs;
     $pitcher->defense = $request->defense;
     $pitcher->defense2 = $request->defense2;
-    $pitcher->defense3 = $request->defense3;
+    $pitcher->defense3 = (empty($request->defense3)) ?'NONE' :$request->defense3 ;
     $pitcher->run = $request->run;
     $pitcher->save();
     $mid = $request->mid;
