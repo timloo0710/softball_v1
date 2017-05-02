@@ -224,10 +224,19 @@ $(document).ready(function() {
                     {
                         console.log(data[i].id + ",  " + data[i].visit_name+ ",  " + data[i].host_name );
                         $("#select_match").append($("<option></option>").attr("value", data[i].id).text(data[i].visit_name+' VS '+data[i].host_name    ));                
-                    }        
+                    }  
+                //統計用 
+                $("#select_match_total option").remove();
+                    for (var i in data) 
+                    {
+                        console.log(data[i].id + ",  " + data[i].visit_name+ ",  " + data[i].host_name );
+                        $("#select_match_total").append($("<option></option>").attr("value", data[i].id).text(data[i].visit_name+' VS '+data[i].host_name    ));                
+                    }  
+                          
                 } ,
                 dataType: "json"
             });
+
         setCookie("school_val", $('#select_school').val(), 1);    
         if ( getCookie("school_val") == null){
             setCookie("school_val", 1, 1);    
@@ -496,6 +505,95 @@ function getCookie(cname) {
                 dataType: "json"
             });
     });
+
+function fillPlayerTotals(data){
+    var s_html="";
+    //  移除全部的項目
+    s_html="<thead>  <tr>   <th>姓名</th>   <th>內容</th>    <th>小計</th>   </tr>    </thead>    <tbody> "; 
+    for (var i in data) 
+    {
+            var color="";
+            console.log(i%4);
+            if (i%4==0)
+                color="info";
+            else if (i%4==1)
+                color="success";
+            else if (i%4==2)
+                color="danger";
+            else if (i%4==3)
+                color="warning";
+            s_html+=  '<tr class="'+color+'">';
+            s_html+=  '    <td>'+data[i].player+'</td>';
+            s_html+=  '    <td>'+data[i].result+'</td>';
+            s_html+=  '    <td>'+data[i].count+'</td>';
+            console.log(data[i].player + ",  " + data[i].count );
+    } 
+    s_html+="</tbody> ";
+    console.log(s_html); 
+    return s_html ;
+}
+
+
+//選對戰組合_統計用
+    $('#select_match_total').on('change blur', function() {
+        //alert( this.value );
+        setCookie("match_val", this.value, 1);
+        //更新 id 屬性，給edit/delete 用
+        //alert(getCookie("school_val"));
+        $("#h_pitcher").empty();
+        $("#h_batter").empty();
+        $("#v_pitcher").empty();
+        $("#v_batter").empty();
+        $.ajax({
+            type: "GET",
+            url: "/totals/host/"+getCookie("match_val")+"/pitcher", 
+            success:function(data) {
+                console.log('--------------------fillPlayerTotals----------------------------------------------');
+                console.log(data);
+             $("#h_pitcher").html(fillPlayerTotals(data)) ;  
+                } ,
+                dataType: "json"
+            });
+
+        $.ajax({
+            type: "GET",
+            url: "/totals/host/"+getCookie("match_val")+"/batter", 
+            success:function(data) {
+            console.log('--------------------fillPlayerTotals----------------------------------------------');
+            console.log(data);
+                
+               $("#h_pitcher").html( fillPlayerTotals(data));
+                } ,
+                dataType: "json"
+            });
+
+        $.ajax({
+            type: "GET",
+            url: "/totals/visit/"+getCookie("match_val")+"/pitcher", 
+            success:function(data) {
+                console.log('--------------------fillPlayerTotals----------------------------------------------');
+                console.log(data);
+               $("#v_pitcher").html( fillPlayerTotals(data));
+                } ,
+                dataType: "json"
+            });
+
+        $.ajax({
+            type: "GET",
+            url: "/totals/visit/"+getCookie("match_val")+"/batter", 
+            success:function(data) {
+            console.log('--------------------fillPlayerTotals----------------------------------------------');
+            console.log(data);
+
+               $("#v_pitcher").html( fillPlayerTotals(data));
+                } ,
+                dataType: "json"
+            });
+
+
+    });
+
+
 
 function refreshHV(data){
     console.log(data);
