@@ -361,6 +361,7 @@ Route::delete('/pitchers/{id}', function ($id) {
 });
 
 //按盃賽統計
+/*
 Route::get('/totals/host/{cid}/pitcher', function ($cid) { 
     $matches = App\Match::select('id')->where('cup_id', '=', $cid)->get()->toArray();;
     
@@ -373,53 +374,53 @@ Route::get('/totals/host/{cid}/pitcher', function ($cid) {
 
     return json_encode($playerStats);
 });
+*/
 
 //只統計某場比賽
 Route::get('/totals/host/{mid}/pitcher', function ($mid) {
-    $playerStats = DB::table('pitchers')
-                    ->where('inning_id', 'like', '%U')
-                    ->where('match_id', '=', $mid)
-                    ->groupBy(['defender_id','p_result'])
-                    ->get(['defender_id AS player', 'p_result AS result'])  //
-                    ->count();
- //$users = DB::select('select * from users where active = ?', [1]);
+$playerStats = DB::select("SELECT defender_id AS player,p_result AS result,count(*) AS count FROM pitchers WHERE match_id = ? and inning_id like '%U'  group by defender_id,p_result", [$mid]);
 
-//        return view('user.index', ['users' => $users]);
-
-    return json_encode($playerStats);
+return json_encode($playerStats);
 });
 
-//$query = "select * from myTable";
-//$results = DB::connection('myDB')->select($query);
 Route::get('/totals/host/{mid}/batter', function ($mid) {
+    /*
     $playerStats = DB::table('pitchers')
                     ->where('inning_id', 'like', '%D')
                     ->where('match_id', '=', $mid)
                     ->groupBy('attacker_id')
                     ->groupBy('p_result')
                     ->count();
+     */               
+ $playerStats = DB::select("SELECT attacker_id AS player,p_result AS result,count(*) AS count FROM pitchers WHERE match_id = ? and inning_id like '%D'  group by attacker_id,p_result", [$mid]);
     return json_encode($playerStats);
 });
 
 
 Route::get('/totals/visit/{mid}/pitcher', function ($mid) {
+/*
     $playerStats = DB::table('pitchers')
                     ->where('inning_id', 'like', '%D')
                     ->where('match_id', '=', $mid)
                     ->groupBy('defender_id')
                     ->groupBy('p_result')
                     ->count();
+                    */
+ $playerStats = DB::select("SELECT defender_id AS player,p_result AS result,count(*) AS count FROM pitchers WHERE match_id = ? and inning_id like '%D'  group by defender_id,p_result", [$mid]);
     return json_encode($playerStats);
 });
 
 
 Route::get('/totals/visit/{mid}/batter', function ($mid) {
+    /*
     $playerStats = DB::table('pitchers')
                     ->where('inning_id', 'like', '%U')
                     ->where('match_id', '=', $mid)
                     ->groupBy('attacker_id')
                     ->groupBy('p_result')
                     ->count();
+                    */
+ $playerStats = DB::select("SELECT attacker_id AS player,p_result AS result,count(*) AS count FROM pitchers WHERE match_id = ? and inning_id like '%U'  group by attacker_id,p_result", [$mid]);
     return json_encode($playerStats);
 });
 

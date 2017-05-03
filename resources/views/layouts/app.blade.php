@@ -153,8 +153,6 @@
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
  
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
@@ -249,13 +247,6 @@ $(document).ready(function() {
             } ,
                 dataType: "json"
             });
-       /*     
-       $(".edtLog").click(function(){ //[href~='pitcher']
-             alert('edit log');    
-             console.log($(this).data( "q-pid" )) ;
-             console.log(getCookie("match_val"));
-            });    
-            */
 })
 
 //單筆維護
@@ -506,92 +497,7 @@ function getCookie(cname) {
             });
     });
 
-function fillPlayerTotals(data){
-    var s_html="";
-    //  移除全部的項目
-    s_html="<thead>  <tr>   <th>姓名</th>   <th>內容</th>    <th>小計</th>   </tr>    </thead>    <tbody> "; 
-    for (var i in data) 
-    {
-            var color="";
-            console.log(i%4);
-            if (i%4==0)
-                color="info";
-            else if (i%4==1)
-                color="success";
-            else if (i%4==2)
-                color="danger";
-            else if (i%4==3)
-                color="warning";
-            s_html+=  '<tr class="'+color+'">';
-            s_html+=  '    <td>'+data[i].player+'</td>';
-            s_html+=  '    <td>'+data[i].result+'</td>';
-            s_html+=  '    <td>'+data[i].count+'</td>';
-            console.log(data[i].player + ",  " + data[i].count );
-    } 
-    s_html+="</tbody> ";
-    console.log(s_html); 
-    return s_html ;
-}
 
-
-//選對戰組合_統計用
-    $('#select_match_total').on('change blur', function() {
-        //alert( this.value );
-        setCookie("match_val", this.value, 1);
-        //更新 id 屬性，給edit/delete 用
-        //alert(getCookie("school_val"));
-        $("#h_pitcher").empty();
-        $("#h_batter").empty();
-        $("#v_pitcher").empty();
-        $("#v_batter").empty();
-        $.ajax({
-            type: "GET",
-            url: "/totals/host/"+getCookie("match_val")+"/pitcher", 
-            success:function(data) {
-                console.log('--------------------fillPlayerTotals----------------------------------------------');
-                console.log(data);
-             $("#h_pitcher").html(fillPlayerTotals(data)) ;  
-                } ,
-                dataType: "json"
-            });
-
-        $.ajax({
-            type: "GET",
-            url: "/totals/host/"+getCookie("match_val")+"/batter", 
-            success:function(data) {
-            console.log('--------------------fillPlayerTotals----------------------------------------------');
-            console.log(data);
-                
-               $("#h_pitcher").html( fillPlayerTotals(data));
-                } ,
-                dataType: "json"
-            });
-
-        $.ajax({
-            type: "GET",
-            url: "/totals/visit/"+getCookie("match_val")+"/pitcher", 
-            success:function(data) {
-                console.log('--------------------fillPlayerTotals----------------------------------------------');
-                console.log(data);
-               $("#v_pitcher").html( fillPlayerTotals(data));
-                } ,
-                dataType: "json"
-            });
-
-        $.ajax({
-            type: "GET",
-            url: "/totals/visit/"+getCookie("match_val")+"/batter", 
-            success:function(data) {
-            console.log('--------------------fillPlayerTotals----------------------------------------------');
-            console.log(data);
-
-               $("#v_pitcher").html( fillPlayerTotals(data));
-                } ,
-                dataType: "json"
-            });
-
-
-    });
 
 
 
@@ -947,29 +853,37 @@ function fillLog(data){
     //  移除全部的項目
     $("#clog").empty();
     s_html="<thead>  <tr>   <th>目前半局</th>   <th>投手</th>    <th>打者</th>  <th>內容</th> <th>出局數</th> <th>得/失分</th><th>動作</th> </tr>    </thead>    <tbody> "; 
+    var o_inn=data[0].inning_id;
+    var n_inn;
 
     for (var i in data) 
     {
-            var color="";
-            //console.log(i%4);
-            if (i%4==0)
-                color="info";
-            else if (i%4==1)
-                color="success";
-            else if (i%4==2)
-                color="danger";
-            else if (i%4==3)
-                color="warning";
-            s_html+=  '<tr class="'+color+'">';
+        n_inn = data[i].inning_id
+
+        var color="";
+        //console.log(i%4);
+        if (i%4==0)
+            color="info";
+        else if (i%4==1)
+            color="success";
+        else if (i%4==2)
+            color="danger";
+        else if (i%4==3)
+            color="warning";
+        s_html+=  '<tr class="'+color+'">';
+        if (!(n_inn==o_inn) || (i==0))
             s_html+=  '    <td>'+data[i].inning_id+'</td>';
-            s_html+=  '    <td>'+data[i].defender_id+'</td>';
-            s_html+=  '    <td>'+data[i].attacker_id+'</td>';
-            s_html+=  '    <td>'+data[i].p_result+'</td>';
-            s_html+=  '    <td>'+data[i].outs+'</td>';
-            s_html+=  '    <td>'+data[i].run+'</td>';
-            s_html+=  '    <td><button type="button" class="edtDetail btn btn-warning btn-xs" data-inning="'+data[i].inning_id+'"  data-type="log" data-id="'+data[i].id+'" data-toggle="modal" data-target="#edtLogger">編輯</button>';
-            s_html+=  '        <button type="button" data-d-pid="'+data[i].id+'"class="delDetail  btn btn-success btn-xs" id="delLog_'+data[i].id+'" >刪除</button></td></tr>';
-            //console.log(data[i].hitorder + ",  " + data[i].name );
+        else
+            s_html+=  '    <td></td>';
+        s_html+=  '    <td>'+data[i].defender_id+'</td>';
+        s_html+=  '    <td>'+data[i].attacker_id+'</td>';
+        s_html+=  '    <td>'+data[i].p_result+'</td>';
+        s_html+=  '    <td>'+data[i].outs+'</td>';
+        s_html+=  '    <td>'+data[i].run+'</td>';
+        s_html+=  '    <td><button type="button" class="edtDetail btn btn-warning btn-xs" data-inning="'+data[i].inning_id+'"  data-type="log" data-id="'+data[i].id+'" data-toggle="modal" data-target="#edtLogger">編輯</button>';
+        s_html+=  '        <button type="button" data-d-pid="'+data[i].id+'"class="delDetail  btn btn-success btn-xs" id="delLog_'+data[i].id+'" >刪除</button></td></tr>';
+        //console.log(data[i].hitorder + ",  " + data[i].name );
+        o_inn = data[i].inning_id
     } 
     s_html+="</tbody> ";
     console.log(s_html);
@@ -1133,56 +1047,6 @@ function onSubmit( form ){
 
 */
 
-var data = {
-    labels: ["1B 一安", "2B 二安", "3B 二安", "HR 全壘打", "GO 滾地球出局", "AO 飛球出局", "K 三振","GIDP 雙殺打","R 得分","RBI 打點"],
-    datasets: [
-        {
-            label: "My First dataset",
-            backgroundColor: "rgba(179,181,198,0.2)",
-            borderColor: "rgba(179,181,198,1)",
-            pointBackgroundColor: "rgba(179,181,198,1)",
-            pointBorderColor: "#fff",
-            pointHoverBackgroundColor: "#fff",
-            pointHoverBorderColor: "rgba(179,181,198,1)",
-            data: [65, 59, 90, 81, 56, 55, 40, 56, 55, 40]
-        }
-    ]
-};
-
-
-
- var options= {
-            scale: {
-                reverse: true,
-                ticks: {
-                    beginAtZero: true
-                }
-            }
-    };
-
-//------------------------------------------------------------------
-var ctx4 = document.getElementById("myChart4");
-var myChart4 = new Chart(ctx4, {
-  type: 'radar',
-    data: data,
-    options: options
-});
-
-//------------------------------------------------------------------
-var ctx5 = document.getElementById("myChart5");
-var myChart5 = new Chart(ctx5, {
-  type: 'radar',
-    data: data,
-    options: options
-});
-
-//------------------------------------------------------------------
-var ctx6 = document.getElementById("myChart6");
-var myChart6 = new Chart(ctx6, {
-  type: 'radar',
-    data: data,
-    options: options
-});
 
 </script>
 
