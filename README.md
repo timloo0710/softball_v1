@@ -24,6 +24,11 @@ larvel 5.3.X 實作後端。
 
 網頁配色是用bootswatch。
 
+統計圖表是引用 chart js 的radar 型態的圖。
+
+後端group by 打者(or 投者)的各種結打擊結果的小計json數據，傳回前端。前端接收後，組成符合chart js 的radar 型態的 associate array 的 array，
+讓chart js 畫出 radar圖。
+
 
 ![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/sf1.jpg)
 
