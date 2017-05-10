@@ -153,7 +153,7 @@
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
- 
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.6.2/konva.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
 
@@ -1046,6 +1046,231 @@ function onSubmit( form ){
 }
 
 */
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+var stage = new Konva.Stage({
+  container: 'softball_field',
+  width: 600,
+  height: 800
+});
+
+var dragLayer = new Konva.Layer();
+var Layer9 = new Konva.Layer();
+
+
+var rect = new Konva.Rect({
+      x: 150,
+      y: 560,
+      width: 200,
+      height: 200,
+      //fill: 'green',
+      stroke: 'black',
+      strokeWidth: 3
+    });
+      Layer9.add(rect);
+
+  var hLine1 = new Konva.Line({
+      points: [150, 650, 350, 650],
+      stroke: 'red',
+      strokeWidth: 3,
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
+
+  var hLine2 = new Konva.Line({
+      points: [150, 700, 350, 700],
+      stroke: 'red',
+      strokeWidth: 3,
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
+
+  var vLine1 = new Konva.Line({
+      points: [200, 560, 200, 760],
+      stroke: 'red',
+      strokeWidth: 3,
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
+
+  var vLine2 = new Konva.Line({
+      points: [250, 560, 250, 760],
+      stroke: 'red',
+      strokeWidth: 3,
+      lineCap: 'round',
+      lineJoin: 'round'
+    });
+
+      Layer9.add(hLine1,hLine2,vLine1,vLine2);
+
+//stage.add(layer, dragLayer);
+      stage.add(Layer9);
+
+var ballLayer = new Konva.Layer();
+stage.add(ballLayer);
+var pics = ["/img/strike/b1.png", "/img/strike/b2.png", "/img/strike/b3.png", "/img/strike/b4.png", "/img/strike/b5.png",
+            "/img/strike/b6.png", "/img/strike/b7.png", "/img/strike/b8.png", "/img/strike/b9.png", "/img/strike/b10.png"
+            ];
+$.each(pics, function( index, value ) {
+            // create new Konva.Image from src attribute
+            Konva.Image.fromURL(value, function(image) {
+                // 
+                if (index<=4){
+                    image.setAttrs({
+                        draggable: true,
+                        x: index*25,
+                        y:570,
+                        width:20,
+                        height:20
+                    });
+                } else {
+                    image.setAttrs({
+                        draggable: true,
+                        x: (index-5)*25,
+                        y:600,
+                        width:20,
+                        height:20
+                    });
+                }
+                // append to layer
+                ballLayer.add(image);
+                // update layer
+                ballLayer.draw();
+            })
+});
+
+var skpics = ["/img/strike/s1.png", "/img/strike/s2.png", "/img/strike/s3.png", "/img/strike/s4.png", "/img/strike/s5.png",
+            "/img/strike/s6.png", "/img/strike/s7.png", "/img/strike/s8.png", "/img/strike/s9.png", "/img/strike/s10.png"
+            ];
+$.each(skpics, function( index, value ) {
+            // create new Konva.Image from src attribute
+            Konva.Image.fromURL(value, function(image) {
+                // 
+                if (index<=4){
+                    image.setAttrs({
+                        draggable: true,
+                        x: 250+index*25,
+                        y:570,
+                        width:20,
+                        height:20
+                    });
+                } else {
+                    image.setAttrs({
+                        draggable: true,
+                        x: 250+(index-5)*25,
+                        y:600,
+                        width:20,
+                        height:20
+                    });
+                }
+                // append to layer
+                ballLayer.add(image);
+                // update layer
+                ballLayer.draw();
+            })
+});
+
+var fypics = ["/img/strike/f1.png", "/img/strike/f2.png", "/img/strike/f3.png", "/img/strike/f4.png", "/img/strike/f5.png",
+            "/img/strike/f6.png", "/img/strike/f7.png", "/img/strike/f8.png", "/img/strike/f9.png", "/img/strike/f10.png"
+            ];
+$.each(fypics, function( index, value ) {
+            // create new Konva.Image from src attribute
+            Konva.Image.fromURL(value, function(image) {
+                // 
+                if (index<=4){
+                    image.setAttrs({
+                        draggable: true,
+                        x: index*25,
+                        y:470,
+                        width:20,
+                        height:20
+                    });
+                } else {
+                    image.setAttrs({
+                        draggable: true,
+                        x: (index-5)*25,
+                        y:500,
+                        width:20,
+                        height:20
+                    });
+                }
+                // append to layer
+                ballLayer.add(image);
+                // update layer
+                ballLayer.draw();
+            })
+});
+
+
+var gdpics = ["/img/strike/d1.png", "/img/strike/d2.png", "/img/strike/d3.png", "/img/strike/d4.png", "/img/strike/d5.png",
+            "/img/strike/d6.png", "/img/strike/d7.png", "/img/strike/d8.png", "/img/strike/d9.png", "/img/strike/d10.png"
+            ];
+$.each(gdpics, function( index, value ) {
+            // create new Konva.Image from src attribute
+            Konva.Image.fromURL(value, function(image) {
+                // 
+                if (index<=4){
+                    image.setAttrs({
+                        draggable: true,
+                        x: 250+index*25,
+                        y:470,
+                        width:20,
+                        height:20
+                    });
+                } else {
+                    image.setAttrs({
+                        draggable: true,
+                        x: 250+(index-5)*25,
+                        y:500,
+                        width:20,
+                        height:20
+                    });
+                }
+                // append to layer
+                ballLayer.add(image);
+                // update layer
+                ballLayer.draw();
+            })
+});
+/*
+var imageObj = new Image();
+    imageObj.src = '/img/field.jpg';
+    imageObj.onload = function() {
+      var softField = new Konva.Image({
+        x: 10,
+        y: 5,
+        image: imageObj,
+        width: 450,
+        height: 550
+      });
+      // add the shape to the layer
+      dragLayer.add(softField);
+      softField.moveToBottom();
+      // add the layer to the stage
+      stage.add(dragLayer);
+    };
+dragLayer.draw();
+*/
+
+Konva.Image.fromURL('/img/field.jpg', function(image){
+  // image is Konva.Image instance
+  //image.x=10,
+  //image.y=5;
+  //image.width = 450;
+  //image.height = 550;
+ // image.moveToBottom();
+    image.setAttrs({
+        //draggable: true,
+        x: 10,
+        y:5,
+        width:450,
+        height:550
+    });
+ 
+  dragLayer.add(image);
+  dragLayer.draw();
+});
 
 
 </script>

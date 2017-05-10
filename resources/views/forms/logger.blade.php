@@ -7,7 +7,13 @@
         <form action="{{ url('cup')}}" method="POST" class="form-horizontal">
             {{ csrf_field() }}
             <div class="modal-header">                
-            新增一筆記錄
+            <h3>新增一筆記錄</h3>
+                <div id="softball_field">
+                    <div id="ball1"></div>
+                    <div id="ball2"></div>
+                    <div id="ball1"></div>
+                    <div id="ball2"></div>
+                </div>
             </div>
             <div class="modal-body">
                 <!--  Name -->
