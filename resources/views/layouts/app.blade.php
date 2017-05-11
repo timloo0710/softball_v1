@@ -1060,7 +1060,7 @@ var Layer9 = new Konva.Layer();
 
 
 var rect = new Konva.Rect({
-      x: 150,
+      x: 125,
       y: 560,
       width: 200,
       height: 200,
@@ -1071,7 +1071,7 @@ var rect = new Konva.Rect({
       Layer9.add(rect);
 
   var hLine1 = new Konva.Line({
-      points: [150, 650, 350, 650],
+      points: [125, 620, 325, 620],
       stroke: 'red',
       strokeWidth: 3,
       lineCap: 'round',
@@ -1079,7 +1079,7 @@ var rect = new Konva.Rect({
     });
 
   var hLine2 = new Konva.Line({
-      points: [150, 700, 350, 700],
+      points: [125, 700, 325, 700],
       stroke: 'red',
       strokeWidth: 3,
       lineCap: 'round',
@@ -1087,7 +1087,7 @@ var rect = new Konva.Rect({
     });
 
   var vLine1 = new Konva.Line({
-      points: [200, 560, 200, 760],
+      points: [180, 560, 180, 760],
       stroke: 'red',
       strokeWidth: 3,
       lineCap: 'round',
@@ -1095,7 +1095,7 @@ var rect = new Konva.Rect({
     });
 
   var vLine2 = new Konva.Line({
-      points: [250, 560, 250, 760],
+      points: [275, 560, 275, 760],
       stroke: 'red',
       strokeWidth: 3,
       lineCap: 'round',
@@ -1124,6 +1124,7 @@ $.each(pics, function( index, value ) {
                         width:20,
                         height:20
                     });
+
                 } else {
                     image.setAttrs({
                         draggable: true,
@@ -1133,6 +1134,11 @@ $.each(pics, function( index, value ) {
                         height:20
                     });
                 }
+
+                image.on('dragend', function() {
+                console.log('position:'+stage.getPointerPosition().x+'-------' +stage.getPointerPosition().y);
+                });                    
+                
                 // append to layer
                 ballLayer.add(image);
                 // update layer
@@ -1150,7 +1156,7 @@ $.each(skpics, function( index, value ) {
                 if (index<=4){
                     image.setAttrs({
                         draggable: true,
-                        x: 250+index*25,
+                        x: 350+index*25,
                         y:570,
                         width:20,
                         height:20
@@ -1158,7 +1164,7 @@ $.each(skpics, function( index, value ) {
                 } else {
                     image.setAttrs({
                         draggable: true,
-                        x: 250+(index-5)*25,
+                        x: 350+(index-5)*25,
                         y:600,
                         width:20,
                         height:20
@@ -1213,7 +1219,7 @@ $.each(gdpics, function( index, value ) {
                 if (index<=4){
                     image.setAttrs({
                         draggable: true,
-                        x: 250+index*25,
+                        x: 350+index*25,
                         y:470,
                         width:20,
                         height:20
@@ -1221,7 +1227,7 @@ $.each(gdpics, function( index, value ) {
                 } else {
                     image.setAttrs({
                         draggable: true,
-                        x: 250+(index-5)*25,
+                        x: 350+(index-5)*25,
                         y:500,
                         width:20,
                         height:20
@@ -1233,6 +1239,8 @@ $.each(gdpics, function( index, value ) {
                 ballLayer.draw();
             })
 });
+
+
 /*
 var imageObj = new Image();
     imageObj.src = '/img/field.jpg';
@@ -1259,7 +1267,7 @@ Konva.Image.fromURL('/img/field.jpg', function(image){
   //image.y=5;
   //image.width = 450;
   //image.height = 550;
- // image.moveToBottom();
+ // 
     image.setAttrs({
         //draggable: true,
         x: 10,
@@ -1268,8 +1276,10 @@ Konva.Image.fromURL('/img/field.jpg', function(image){
         height:550
     });
  
-  dragLayer.add(image);
-  dragLayer.draw();
+  ballLayer.add(image);
+  ballLayer.draw();
+  image.moveToBottom();
+  ballLayer.draw();
 });
 
 
