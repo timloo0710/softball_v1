@@ -37,3 +37,9 @@ larvel 5.3.X 實作後端。
 ![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/sf4.jpg)
 
 ![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/mean.JPG)
+記錄好壞球，及擊球落點，這部分是以konvajs 來實作。
+記錄座標的點，用id來識別，好球(綠色)，壞球(紅色)，滾地球(土色)，高飛球(天空色)。
+
+一次整批包成js 陣列ajax傳入後端，或是隨時(偵測到位置的改變)逐筆寫入。寫法上不一樣。
+
+
