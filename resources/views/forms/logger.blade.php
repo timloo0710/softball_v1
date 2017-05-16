@@ -7,13 +7,7 @@
         <form action="{{ url('cup')}}" method="POST" class="form-horizontal">
             {{ csrf_field() }}
             <div class="modal-header">                
-            <h3>新增一筆記錄</h3>
-                <div id="softball_field">
-                    <div id="ball1"></div>
-                    <div id="ball2"></div>
-                    <div id="ball1"></div>
-                    <div id="ball2"></div>
-                </div>
+                <h3>新增一筆記錄</h3>
             </div>
             <div class="modal-body">
                 <!--  Name -->
@@ -66,6 +60,12 @@
                         <select class="form-control" id="select_attacker">
                         </select>                
                     </div>
+                </div>
+                <div id="softball_field">
+                    <div id="ball1"></div>
+                    <div id="ball2"></div>
+                    <div id="ball1"></div>
+                    <div id="ball2"></div>
                 </div>
                 <!--  Name -->
                 <div class="form-group">
