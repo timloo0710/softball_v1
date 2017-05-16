@@ -35,3 +35,5 @@ larvel 5.3.X 實作後端。
 ![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/sf2.jpg)
 ![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/sf3.jpg)
 ![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/sf4.jpg)
+
+![Image of Yaktocat](https://github.com/timloo0710/softball_v1/blob/master/mean.JPG)
