@@ -454,7 +454,7 @@ Route::get('/style/{id}', function ( $id ) {
     //$switch = '1';
     //return view('home',compact('cup','match','player','style','switch'));
     $switch = session('switch');
-    return redirect()->route('/home/',['switch' => $switch]);
+    return redirect('home/'.$switch); //->route('home/'.$switch); //,['switch' => $switch]
     
 });
 
